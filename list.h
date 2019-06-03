@@ -10,6 +10,7 @@
 
 typedef struct list *list_ptr;
 typedef struct list_info *list_info;
+
 struct list {
 	struct elem *head;
 	list_info l_info;
@@ -17,6 +18,8 @@ struct list {
 	int   (*size) 		(list_ptr lst);
 	void  (*push_back)	(list_ptr lst, void *x);
 	void* (*pop_back) 	(list_ptr lst);
+	void  (*insert)		(list_ptr lst, void *x, int index);
+	void* (*remove_by_index)(list_ptr lst, int index); 
 	void  (*walk) 		(list_ptr lst, int (*func)());
 }; 
 
@@ -29,7 +32,6 @@ typedef list_ptr list;
 extern list list_constructor();
 
 #define List 		list_constructor
-
 
 
 #endif 

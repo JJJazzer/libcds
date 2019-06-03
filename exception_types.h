@@ -10,7 +10,7 @@
 
 enum eType {
 	CAP_OFLOW,
-	NIL_VEC,
+	NIL_PTR,
 	ACC_OFLOW,
 };
 

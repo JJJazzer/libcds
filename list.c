@@ -21,6 +21,8 @@ _Bool list_empty(list_ptr lst);
 int   list_size(list_ptr);
 void  list_push_back(list_ptr lst, void *x);
 void *list_pop_back(list_ptr lst);
+void  list_insert(list_ptr lst, void *x, int index);
+void *list_remove_by_index(list_ptr lst, int index);
 void  list_walk(list_ptr lst, int (*func)());
 
 list list_constructor()
@@ -34,6 +36,8 @@ list list_constructor()
 	t->size  = list_size;
 	t->push_back = list_push_back;
 	t->pop_back = list_pop_back;
+	t->insert = list_insert;
+	t->remove_by_index = list_remove_by_index;
 	t->walk = list_walk;
 	return t;
 }
@@ -48,38 +52,45 @@ int list_size(list_ptr lst)
 	return lst->l_info->len;
 }
 
-#define goto_list_tail(cur, len) 	\
-{					\
+#define goto_list_tail(cur, points, len)\
+	struct elem *cur; 		\
+	cur = points; 		\
 	for (int i = 0; i < len; i++)	\
 		cur = cur->next;	\
-}
 
 void list_push_back(list_ptr lst, void *x)
 {
+	list_insert(lst, x, lst->l_info->len);
+}
+
+void *list_pop_back(list_ptr lst)
+{
+	return list_remove_by_index(lst, lst->l_info->len);
+}
+
+void list_insert(list_ptr lst, void *x, int index)
+{
 	struct elem *t;
 	t = chkmalloc(sizeof(*t));
-	struct elem *cur;
-	cur = lst->head;
-	goto_list_tail(cur, lst->l_info->len);
+	goto_list_tail(cur, lst->head, index);
 	t->x = x;
 	t->next = cur->next;
 	cur->next = t;
 	lst->l_info->len++;
 }
 
-void *list_pop_back(list_ptr lst)
+void *list_remove_by_index(list_ptr lst, int index)
 {
-	struct elem *cur;
 	void *x;
-	cur = lst->head;
-	goto_list_tail(cur, lst->l_info->len - 1);
+	struct elem *tmpnode;
+	goto_list_tail(cur, lst->head, index - 1);
 	x = cur->next->x;
-	cur->next = NULL;
-	free(cur->next);
+	tmpnode = cur->next;
+	cur->next = tmpnode->next;
+	free(tmpnode);
 	lst->l_info->len--;
 	return x;
 }
-
 #define walk_list(cur, func)	\
 {						\
 	while (cur != NULL) { 			\

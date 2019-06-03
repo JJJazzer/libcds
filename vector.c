@@ -9,7 +9,7 @@
 #define vec_is_nil(v) 	\
 {			\
 	if (v == NULL)  \
-		exception_vector(NIL_VEC); \
+		exception_vector(NIL_PTR); \
 }
 
 struct vector_info {

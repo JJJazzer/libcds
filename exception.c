@@ -12,8 +12,8 @@
 
 static char *ex_string[] = {
 	"Initial capacity is full, please extend it.",	// capacity over flow
-	"Nil vector, it possible do not initialize.",	// nil vector
-	"Index over than length of vector.",
+	"Nil pointer, it possible do not initialize.",	// nil pointer
+	"Index over than length.",
 };
 
 static char *strexception(enum eType etype)
@@ -30,11 +30,22 @@ void exception_vector(enum eType etype)
 {
 	fprintf(stderr, "vector exception: %s\n", strexception(etype));
 	switch (etype) {
+	case NIL_PTR:
+		assert(0);
 	case CAP_OFLOW:
+	case ACC_OFLOW:
 		return;
-	case NIL_VEC:
+	}
+}
+
+void exception_list(enum eType etype)
+{
+	fprintf(stderr, "vector exception: %s\n", strexception(etype));
+	switch (etype) {
+	case NIL_PTR:
 		assert(0);
 	case ACC_OFLOW:
 		return;
 	}
+
 }
