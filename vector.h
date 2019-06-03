@@ -8,6 +8,8 @@
 #ifndef _VECTOR_H
 #define _VECTOR_H
 
+#include "types.h"
+
 typedef struct vector *vector_ptr;
 typedef struct vector_info *vector_info;
 
@@ -31,21 +33,21 @@ typedef struct vector_info *vector_info;
  *****************************************************************
  */
 struct vector {
-	generic  elem;
+	Generic  elem;
 	vector_info vi;
-	_Bool (*empty)     (vector_ptr v);
-	int   (*size) 	   (vector_ptr v);
-	int   (*capacity)  (vector_ptr v);
-	void  (*push_back) (vector_ptr v, void *elem);
-	void* (*pop_back)  (vector_ptr v);
-	void  (*push_front)(vector_ptr v, void *elem);
-	void* (*pop_front) (vector_ptr v);
-	void  (*insert)    (vector_ptr v, void *elem, int index);
-	void* (*remove_by_index)    (vector_ptr v, int index);
-	void  (*delete)    (vector_ptr *v);
-	void* (*get_elem_by_index) (vector_ptr v, int index);
-	int   (*find_elem) (vector_ptr v, void *elem);
-	void  (*walk)      (vector_ptr v, int (*func) ());
+	_Bool   (*empty)     (vector_ptr v);
+	int     (*size)      (vector_ptr v);
+	int     (*capacity)  (vector_ptr v);
+	void    (*push_back) (vector_ptr v, Generic elem);
+	Generic (*pop_back)  (vector_ptr v);
+	void    (*push_front)(vector_ptr v, Generic elem);
+	Generic (*pop_front) (vector_ptr v);
+	void    (*insert)    (vector_ptr v, Generic elem, int index);
+	Generic (*remove_by_index)    (vector_ptr v, int index);
+	void    (*delete)    (vector_ptr *v);
+	Generic (*get_elem_by_index) (vector_ptr v, int index);
+	int     (*find_elem) (vector_ptr v, Generic elem);
+	void    (*walk)      (vector_ptr v, int (*func) ());
 };
 
 typedef vector_ptr vector;

@@ -19,5 +19,6 @@ extern void exception_alloc() __attribute__((noreturn));
 #endif
 
 extern void exception_vector(enum eType etype);
+extern void exception_list(enum eType etype);
 
 #endif 

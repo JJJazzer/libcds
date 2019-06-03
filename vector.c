@@ -1,5 +1,5 @@
-#include "libcds.h"
 #include "chktools.h"
+#include "vector.h"
 #include "exception_types.h"
 #include "exception.h"
 #include <stdlib.h>
@@ -18,17 +18,17 @@ struct vector_info {
 	int nbyte;
 };
 _Bool vec_empty(vector_ptr v);
-void vec_push_back(vector_ptr v, void *elem);
-void vec_push_front(vector_ptr v, void *elem);
-generic get_elem_by_index(vector_ptr v, int index);
+void vec_push_back(vector_ptr v, Generic elem);
+void vec_push_front(vector_ptr v, Generic elem);
+Generic get_elem_by_index(vector_ptr v, int index);
 int vec_size(vector_ptr v);
 int vec_capacity(vector_ptr v);
-generic vec_pop_back(vector_ptr v);
-generic vec_pop_front(vector_ptr v);
-void insert(vector_ptr v, void *elem, int index);
-void *remove_by_index(vector_ptr v, int index);
+Generic vec_pop_back(vector_ptr v);
+Generic vec_pop_front(vector_ptr v);
+void insert(vector_ptr v, Generic elem, int index);
+Generic remove_by_index(vector_ptr v, int index);
 void vec_delete(vector_ptr *v);
-int vec_find_elem(vector_ptr v, void *elem);
+int vec_find_elem(vector_ptr v, Generic elem);
 void vec_walk(vector_ptr v, int (*func)());
 
 static inline int streq(const char *str1, const char *str2)
@@ -36,15 +36,15 @@ static inline int streq(const char *str1, const char *str2)
 	return strcmp(str1, str2) ? 0 : 1;
 }
 
-static inline void *reallocate(void *oldelem, int nbyte, int length)
+static inline Generic reallocate(Generic oldelem, int nbyte, int length)
 {
-	void *newelem = realloc(oldelem, 2 * length);
+	Generic newelem = realloc(oldelem, 2 * length);
 	memset(newelem, 0, length);
 	memcpy(newelem, oldelem, nbyte * length);
 	return newelem;
 }
 
-static inline void *double_allocate(void *oldelem, int nbyte, int old_length)
+static inline Generic double_allocate(Generic oldelem, int nbyte, int old_length)
 {
 	return reallocate(oldelem, nbyte, 2 * old_length);
 }
@@ -96,7 +96,7 @@ int vec_capacity(vector_ptr v)
 	assert(v);
 	return v->vi->cap;
 }
-void vec_push_back(vector_ptr v, void *elem)
+void vec_push_back(vector_ptr v, Generic elem)
 {
 	int len = v->vi->len;
 	if (len >= v->vi->cap) { 
@@ -108,7 +108,7 @@ void vec_push_back(vector_ptr v, void *elem)
 	v->vi->len++;
 }
 
-generic vec_pop_back(vector_ptr v)
+Generic vec_pop_back(vector_ptr v)
 {
 	vec_is_nil(v && v->vi && v->elem);
 	assert(v);
@@ -116,7 +116,7 @@ generic vec_pop_back(vector_ptr v)
 	return (v->elem + (v->vi->len * v->vi->nbyte));
 }
 
-void insert(vector_ptr v, void *elem, int index)
+void insert(vector_ptr v, Generic elem, int index)
 {
 	vec_is_nil(v && v->vi && v->elem);
 	assert(v);
@@ -144,7 +144,7 @@ void vec_delete(vector_ptr *v)
 	free(*v);
 }
 
-generic get_elem_by_index(vector_ptr v, int index)
+Generic get_elem_by_index(vector_ptr v, int index)
 {
 	char *warn_info = "warning: index should be > 0\n";
 	vec_is_nil(v && v->vi && v->elem);
@@ -158,7 +158,7 @@ generic get_elem_by_index(vector_ptr v, int index)
 	return (v->elem + (index * v->vi->nbyte));
 }
 
-int vec_find_elem(vector_ptr v, void *elem)
+int vec_find_elem(vector_ptr v, Generic elem)
 {
 	__WALK_VECTOR(0, v->vi->len, 1,
 		if (memcmp(elem, v->elem + (i * v->vi->nbyte),
@@ -168,24 +168,25 @@ int vec_find_elem(vector_ptr v, void *elem)
 	return -1;
 }
 
-void vec_push_front(vector_ptr v, void *elem)
+void vec_push_front(vector_ptr v, Generic elem)
 {
 	return v->insert(v, elem, 0);
 }
 
-void *vec_pop_front(vector_ptr v)
+Generic vec_pop_front(vector_ptr v)
 {
 	return remove_by_index(v, 0);
 }
 
-void *remove_by_index(vector_ptr v, int index)
+Generic remove_by_index(vector_ptr v, int index)
 {
 	vec_is_nil(v && v->vi && v->elem);
 	if (index >= v->vi->len) {
 		exception_vector(ACC_OFLOW);
+		return NULL;
 	}
 
-	void *x = v->elem + (index * v->vi->nbyte);
+	Generic x = v->elem + (index * v->vi->nbyte);
 	memcpy(v->elem + (index * v->vi->nbyte),
 			v->elem + ((index + 1) * v->vi->nbyte),
 			v->vi->nbyte * (v->vi->len - index));

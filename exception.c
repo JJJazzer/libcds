@@ -40,7 +40,7 @@ void exception_vector(enum eType etype)
 
 void exception_list(enum eType etype)
 {
-	fprintf(stderr, "vector exception: %s\n", strexception(etype));
+	fprintf(stderr, "list exception: %s\n", strexception(etype));
 	switch (etype) {
 	case NIL_PTR:
 		assert(0);

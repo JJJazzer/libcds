@@ -8,10 +8,7 @@
 #ifndef _LIBCDS_H
 #define _LIBCDS_H
 
-typedef void *generic; 
-
 #include "vector.h"
-
 #line 15 "libcs.h"
 
 /* Take off the "clothing" of void pointer.  */
