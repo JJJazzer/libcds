@@ -1,1 +1,4 @@
 test*.c
+*.o
+*.a
+a.out
