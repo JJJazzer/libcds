@@ -6,8 +6,8 @@
 #######################################################################
 
 lib := libcds.a
-obj := vector.o list.o exception.o 
-src := vector.c list.c exception.c
+obj := vector.o list.o stack.o exception.o 
+src := vector.c list.c stack.c exception.c
 CC  := gcc
 CFLAGS += -DCOMPILER_GCC 
 $(lib): $(obj)

@@ -15,7 +15,8 @@ typedef struct list_info *list_info;
 
 struct list {
 	struct elem *head;
-	list_info l_info;
+	int 	length;
+	int 	nbyte;
 	_Bool   (*empty) 	(list_ptr lst);
 	int     (*size) 	(list_ptr lst);
 	void    (*push_back)	(list_ptr lst, Generic x);

@@ -17,7 +17,10 @@
 
 #include "list.h"
 
-#line 23 "libcds.h"
+#line 20 "libcds.h"
 
+#include "stack.h"
+
+#line 24 "libcds.h"
 
 #endif

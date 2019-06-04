@@ -10,11 +10,6 @@
 #include <assert.h>
 #include <string.h>
 
-struct list_info {
-	int len;
-	int nbyte;
-};
-
 struct elem {
 	Generic x;
 	struct elem *next;
@@ -37,10 +32,9 @@ list list_constructor(int nbyte)
 {
  	list t;
 	t = chkmalloc(sizeof(*t));
-	t->l_info = chkmalloc(sizeof(*t->l_info));
 	t->head = chkmalloc(sizeof(*t->head));
-	t->l_info->len = 0;
-	t->l_info->nbyte = nbyte;
+	t->length = 0;
+	t->nbyte = nbyte;
 
 	t->empty = list_empty;
 	t->size  = list_size;
@@ -57,31 +51,31 @@ list list_constructor(int nbyte)
 _Bool list_empty(list_ptr lst)
 {
 	list_is_nil(lst && lst->head);
-	return lst->l_info->len == 0;
+	return lst->length == 0;
 }
 
 int list_size(list_ptr lst)
 {
 	list_is_nil(lst && lst->head);
-	return lst->l_info->len;
+	return lst->length;
 }
 
-#define goto_list_tail(cur, points, len)\
+#define goto_list_tail(cur, points, length)\
 	struct elem *cur; 		\
 	cur = points; 		\
-	for (int i = 0; i < len; i++)	\
+	for (int i = 0; i < length; i++)	\
 		cur = cur->next;	\
 
 void list_push_back(list_ptr lst, Generic x)
 {
 	list_is_nil(lst && lst->head);
-	list_insert(lst, x, lst->l_info->len);
+	list_insert(lst, x, lst->length);
 }
 
 Generic list_pop_back(list_ptr lst)
 {
 	list_is_nil(lst && lst->head);
-	return list_remove_by_index(lst, lst->l_info->len);
+	return list_remove_by_index(lst, lst->length);
 }
 
 void list_insert(list_ptr lst, Generic x, int index)
@@ -92,7 +86,7 @@ void list_insert(list_ptr lst, Generic x, int index)
 	t->x = x;
 	t->next = cur->next;
 	cur->next = t;
-	lst->l_info->len++;
+	lst->length++;
 }
 
 Generic list_remove_by_index(list_ptr lst, int index)
@@ -100,7 +94,7 @@ Generic list_remove_by_index(list_ptr lst, int index)
 	Generic x;
 	struct elem *tmpnode;
 	list_is_nil(lst && lst->head);
-	if (index < 0 || index > lst->l_info->len) {
+	if (index < 0 || index > lst->length) {
 		exception_list(ACC_OFLOW);
 		return NULL;
 	}
@@ -109,7 +103,7 @@ Generic list_remove_by_index(list_ptr lst, int index)
 	tmpnode = cur->next;
 	cur->next = tmpnode->next;
 	free(tmpnode);
-	lst->l_info->len--;
+	lst->length--;
 	return x;
 }
 
@@ -130,7 +124,7 @@ int list_find_elem(list_ptr lst, Generic x)
 	struct elem *cur = lst->head->next;
 	int index = 0;
 	while (cur != NULL) {
-		if (memcmp(cur->x, x, lst->l_info->nbyte) == 0)
+		if (memcmp(cur->x, x, lst->nbyte) == 0)
 			return index;
 		index++;
 		cur = cur->next;

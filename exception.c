@@ -49,3 +49,14 @@ void exception_list(enum eType etype)
 	}
 
 }
+
+void exception_stack(enum eType etype)
+{
+	fprintf(stderr, "stack exception: %s\n", strexception(etype));
+	switch (etype) {
+	case NIL_PTR:
+		assert(0);
+	case ACC_OFLOW:
+		return;
+	}
+}
