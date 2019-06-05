@@ -22,19 +22,19 @@ vector v1 = Vector(type, capacity);
 v1->size(v1);
 ```
 Vector structure have 13 member functions:
-* bool empty(object)
-* int size(object)
-* int capacity(object)
-* void push_back(object, elements)
-* elements pop_back(object)
-* void push_front(object, elements)
-* elements pop_front(object)
-* void insert(object, elements, index)
-* elements remove_by_index(object, index)
-* void delete(object)
-* elements get_elem_by_index(object, index)
-* int find_elem(object, elements)
-* void walk(object, callback function)
+* `bool empty(object)`
+* `int size(object)`
+* `int capacity(object)`
+* `void push_back(object, elements)`
+* `elements pop_back(object)`
+* `void push_front(object, elements)`
+* `elements pop_front(object)`
+* `void insert(object, elements, index)`
+* `elements remove_by_index(object, index)`
+* `void delete(object)`
+* `elements get_elem_by_index(object, index)`
+* `int find_elem(object, elements)`
+* `void walk(object, callback function)`
 
 Example:
 ```
@@ -59,15 +59,15 @@ Usage:
 list lst1 = List(int)
 ```
 List structure have 9 member functions:
-* bool empty(object)
-* int size(object)
-* void push_back(object, elements)
-* elements pop_back(object)
-* void insert(object, elements, index)
-* elements remove_by_index(object, index)
-* void delete(object)
-* int find_elem(object, elements)
-* void walk(object, callback function)
+* `bool empty(object)`
+* `int size(object)`
+* `void push_back(object, elements)`
+* `elements pop_back(object)`
+* `void insert(object, elements, index)`
+* `elements remove_by_index(object, index)`
+* `void delete(object)`
+* `int find_elem(object, elements)`
+* `void walk(object, callback function)`
 
 ### *Structure of stack*
 This stack structure is implementation with link list. 
@@ -76,8 +76,8 @@ Usage:
 stack stk1 = Stack(int)
 ```
 This structure just have 5 member functions:
-* bool empty(object)
-* int size(object)
-* void push(object, elements)
-* elements pop(object)
-* void delete(object)
+* `bool empty(object)`
+* `int size(object)`
+* `void push(object, elements)`
+* `elements pop(object)`
+* `void delete(object)`
