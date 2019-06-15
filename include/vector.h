@@ -10,8 +10,8 @@
 
 #include "types.h"
 
-typedef struct vector *vector_ptr;
-typedef struct vector_info *vector_info;
+#define T	Vector_T
+typedef struct T *T;
 
 /*
  *****************************************************************
@@ -32,28 +32,11 @@ typedef struct vector_info *vector_info;
  * walk: 	Walking to vector.				 *
  *****************************************************************
  */
-struct vector {
-	Generic  elem;
-	vector_info vi;
-	_Bool   (*empty)     (vector_ptr v);
-	int     (*size)      (vector_ptr v);
-	int     (*capacity)  (vector_ptr v);
-	void    (*push_back) (vector_ptr v, Generic elem);
-	Generic (*pop_back)  (vector_ptr v);
-	void    (*push_front)(vector_ptr v, Generic elem);
-	Generic (*pop_front) (vector_ptr v);
-	void    (*insert)    (vector_ptr v, Generic elem, int index);
-	Generic (*remove_by_index)    (vector_ptr v, int index);
-	void    (*delete)    (vector_ptr *v);
-	Generic (*get_elem_by_index) (vector_ptr v, int index);
-	int     (*find_elem) (vector_ptr v, Generic elem);
-	void    (*walk)      (vector_ptr v, int (*func) ());
-};
 
-typedef vector_ptr vector;
+typedef int (*CALLBACK)(void *x);
 
 /* It used to consturct an object of vector. */
-#define Vector(type, cap) 	vector_constructor(cap, sizeof(type))
+#define VECTOR_INIT(type, cap) 	vector_constructor(cap, sizeof(type))
 
 #define __WALK_VECTOR(start, end, step, func) \
 {					\
@@ -67,6 +50,20 @@ typedef vector_ptr vector;
  * 	Don't call this function, you should call macro of "Vector(type, cap)",
  * 	This function should call never.
  */
-extern vector_ptr vector_constructor(int cap, int nbyte);
+extern T 	vector_constructor	(int cap, int nbyte);
+extern _Bool 	vec_empty 		(T vec);
+extern int 	vec_size 		(T vec);
+extern int 	vec_capacity 		(T vec);
+extern void 	vec_pushback		(T vec, Generic elem);
+extern Generic 	vec_popback 		(T vec);
+extern void 	vec_pushfront 		(T vec, Generic elem);
+extern Generic 	vec_popfront 		(T vec);
+extern void 	vec_insert		(T vec, Generic elem, int index);
+extern Generic 	vec_remove_by_idx	(T vec, int index);
+extern void 	vec_delete		(T *vec);
+extern Generic 	vec_get_elem_by_idx 	(T vec, int index);
+extern int 	vec_find_elem 		(T vec, Generic elem);
+extern void 	vec_walk		(T vec, CALLBACK p);
 
+#undef T
 #endif

@@ -10,33 +10,27 @@
 
 #include "types.h"
 
-typedef struct list *list_ptr;
-typedef struct list_info *list_info;
 
-struct list {
-	struct elem *head;
-	int 	length;
-	int 	nbyte;
-	_Bool   (*empty) 	(list_ptr lst);
-	int     (*size) 	(list_ptr lst);
-	void    (*push_back)	(list_ptr lst, Generic x);
-	Generic (*pop_back) 	(list_ptr lst);
-	void    (*insert)	(list_ptr lst, Generic x, int index);
-	Generic (*remove_by_index) (list_ptr lst, int index);
-	void    (*delete) 	(list_ptr *lst);
-	int     (*find_elem) 	(list_ptr lst, Generic x);
-	void    (*walk) 	(list_ptr lst, int (*func)());
-}; 
-
-typedef list_ptr list;
+#define T	List_T
+typedef struct T	*T;
 
 /* DO NOT:
  * 	Do not call this function, please use macro "List()"
  * 	to create a link list.
  */
-extern list list_constructor();
+extern T list_constructor();
 
-#define List(type) 		list_constructor(sizeof(type))
+#define LIST_INIT(type) 		list_constructor(sizeof(type))
 
+extern _Bool 	list_empty		(T lst);
+extern int 	list_size		(T lst);
+extern void 	list_pushback		(T lst, Generic x);
+extern Generic 	list_popback 		(T lst);
+extern void 	list_insert		(T lst, Generic x, int index);
+extern Generic 	list_remove_by_idx	(T lst, int index);
+extern void 	list_delete		(T *lst);
+extern int 	list_find_elem 		(T lst, Generic x);
+extern void 	list_walk		(T lst, int (*CALLBACK) (void*));
 
+#undef T
 #endif 

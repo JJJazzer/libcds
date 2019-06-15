@@ -12,24 +12,30 @@
 		exception_vector(NIL_PTR); \
 }
 
+#define T	Vector_T
+struct T {
+	Generic elem;
+	struct vector_info *vi;
+};
 struct vector_info {
 	int len;
 	int cap;
 	int nbyte;
 };
-_Bool vec_empty(vector_ptr v);
-void vec_push_back(vector_ptr v, Generic elem);
-void vec_push_front(vector_ptr v, Generic elem);
-Generic get_elem_by_index(vector_ptr v, int index);
-int vec_size(vector_ptr v);
-int vec_capacity(vector_ptr v);
-Generic vec_pop_back(vector_ptr v);
-Generic vec_pop_front(vector_ptr v);
-void insert(vector_ptr v, Generic elem, int index);
-Generic remove_by_index(vector_ptr v, int index);
-void vec_delete(vector_ptr *v);
-int vec_find_elem(vector_ptr v, Generic elem);
-void vec_walk(vector_ptr v, int (*func)());
+
+_Bool 	vec_empty	(T v);
+void 	vec_pushback	(T v, Generic elem);
+void	vec_pushfront	(T v, Generic elem);
+Generic	vec_get_elem_by_idx(T v, int index);
+int 	vec_size	(T v);
+int 	vec_capacity	(T v);
+Generic vec_pop_back	(T v);
+Generic vec_pop_front	(T v);
+void 	vec_insert	(T v, Generic elem, int index);
+Generic vec_remove_by_idx(T v, int index);
+void	vec_delete	(T *v);
+int 	vec_find_elem	(T v, Generic elem);
+void 	vec_walk	(T v, int (*func)());
 
 static inline int streq(const char *str1, const char *str2)
 {
@@ -49,9 +55,9 @@ static inline Generic double_allocate(Generic oldelem, int nbyte, int old_length
 	return reallocate(oldelem, nbyte, 2 * old_length);
 }
 
-vector_ptr vector_constructor(int cap, int nbyte)
+T vector_constructor(int cap, int nbyte)
 {
-	vector_ptr v;
+	T v;
 	v = chkmalloc(sizeof(*v));
 	v->vi = chkmalloc(sizeof(*(v->vi)));
 	v->vi->cap = cap;
@@ -59,44 +65,29 @@ vector_ptr vector_constructor(int cap, int nbyte)
 	memset(v->elem, 0, cap * nbyte);
 	v->vi->len = 0;
 	v->vi->nbyte = nbyte;
-
-	/* Function initial */
-	v->empty = vec_empty;
-	v->push_back = vec_push_back;
-	v->push_front = vec_push_front;
-	v->pop_front = vec_pop_front;
-	v->get_elem_by_index = get_elem_by_index;
-	v->size = vec_size;
-	v->capacity = vec_capacity;
-	v->pop_back = vec_pop_back;
-	v->insert   = insert;
-	v->delete   = vec_delete;
-	v->find_elem = vec_find_elem;
-	v->remove_by_index = remove_by_index;
-	v->walk = vec_walk;
 	return v;
 }
 
-_Bool vec_empty(vector_ptr v)
+_Bool vec_empty(T v)
 {
 	vec_is_nil(v && v->vi && v->elem);
 	assert(v);
 	return v->vi->len == 0;
 }
 
-int vec_size(vector_ptr v)
+int vec_size(T v)
 {
 	vec_is_nil(v && v->vi && v->elem);
 	assert(v);
 	return v->vi->len;
 }
-int vec_capacity(vector_ptr v)
+int vec_capacity(T v)
 {
 	vec_is_nil(v && v->vi && v->elem);
 	assert(v);
 	return v->vi->cap;
 }
-void vec_push_back(vector_ptr v, Generic elem)
+void vec_push_back(T v, Generic elem)
 {
 	int len = v->vi->len;
 	if (len >= v->vi->cap) { 
@@ -108,7 +99,7 @@ void vec_push_back(vector_ptr v, Generic elem)
 	v->vi->len++;
 }
 
-Generic vec_pop_back(vector_ptr v)
+Generic vec_pop_back(T v)
 {
 	vec_is_nil(v && v->vi && v->elem);
 	assert(v);
@@ -116,7 +107,7 @@ Generic vec_pop_back(vector_ptr v)
 	return (v->elem + (v->vi->len * v->vi->nbyte));
 }
 
-void insert(vector_ptr v, Generic elem, int index)
+void vec_insert(T v, Generic elem, int index)
 {
 	vec_is_nil(v && v->vi && v->elem);
 	assert(v);
@@ -129,7 +120,7 @@ void insert(vector_ptr v, Generic elem, int index)
 			v->elem = double_allocate(v->elem, v->vi->nbyte, v->vi->cap);
 			v->vi->cap *= 2;
 		} else if (index == v->vi->len) {
-			v->push_back(v, elem);
+			vec_push_back(v, elem);
 			return;
 		}
 		memcpy(v->elem + ((index + 1) * v->vi->nbyte), v->elem + index * v->vi->nbyte, v->vi->nbyte * (v->vi->len - index));
@@ -138,13 +129,13 @@ void insert(vector_ptr v, Generic elem, int index)
 	}
 }
 
-void vec_delete(vector_ptr *v)
+void vec_delete(T *v)
 {
 	free((*v)->elem);
 	free(*v);
 }
 
-Generic get_elem_by_index(vector_ptr v, int index)
+Generic vec_get_elem_by_idx(T v, int index)
 {
 	char *warn_info = "warning: index should be > 0\n";
 	vec_is_nil(v && v->vi && v->elem);
@@ -158,7 +149,7 @@ Generic get_elem_by_index(vector_ptr v, int index)
 	return (v->elem + (index * v->vi->nbyte));
 }
 
-int vec_find_elem(vector_ptr v, Generic elem)
+int vec_find_elem(T v, Generic elem)
 {
 	__WALK_VECTOR(0, v->vi->len, 1,
 		if (memcmp(elem, v->elem + (i * v->vi->nbyte),
@@ -168,17 +159,17 @@ int vec_find_elem(vector_ptr v, Generic elem)
 	return -1;
 }
 
-void vec_push_front(vector_ptr v, Generic elem)
+void vec_push_front(T v, Generic elem)
 {
-	return v->insert(v, elem, 0);
+	return vec_insert(v, elem, 0);
 }
 
-Generic vec_pop_front(vector_ptr v)
+Generic vec_pop_front(T v)
 {
-	return remove_by_index(v, 0);
+	return vec_remove_by_idx(v, 0);
 }
 
-Generic remove_by_index(vector_ptr v, int index)
+Generic vec_remove_by_idx(T v, int index)
 {
 	vec_is_nil(v && v->vi && v->elem);
 	if (index >= v->vi->len) {
@@ -194,7 +185,7 @@ Generic remove_by_index(vector_ptr v, int index)
 	return x;
 }
 
-void vec_walk(vector_ptr v, int (*func) ())
+void vec_walk(T v, int (*func) ())
 {
 	vec_is_nil(v && v->vi && v->elem);
 	__WALK_VECTOR(0, v->vi->len, 1, func(v->elem + (i * v->vi->nbyte)));
