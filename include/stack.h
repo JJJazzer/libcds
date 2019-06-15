@@ -10,19 +10,16 @@
 
 #include "types.h"
 
-typedef struct stack *stack; 
+#define T 	Stack_T
+typedef struct T 	*T; 
 
-struct stack {
-	struct elem *head;
-	int 	length;
-	int 	nbyte;
-	_Bool	(*empty)	(stack stk);
-	int	(*size)		(stack stk);
-	void 	(*push)		(stack stk, Generic x);
-	void* 	(*pop) 		(stack stk);
-	void 	(*delete) 	(stack *stk);
-};
+extern T stack_constructor(int nbyte);
+#define STACK_INIT(type) 		stack_constructor(sizeof(type))
+extern _Bool 	stack_empty 		(T stk);
+extern int 	stack_size 		(T stk);
+extern void 	stack_push 		(T stk, Generic x);
+extern void    *stack_pop 		(T stk);
+extern void 	stack_delete		(T *stk);
+#undef T
 
-extern stack stack_constructor(int nbyte);
-#define Stack(type) 		stack_constructor(sizeof(type))
 #endif

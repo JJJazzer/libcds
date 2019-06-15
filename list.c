@@ -10,53 +10,49 @@
 #include <assert.h>
 #include <string.h>
 
-struct elem {
-	Generic x;
-	struct elem *next;
+#define T	List_T
+struct T {
+	struct elem {
+		Generic x;
+		struct elem *next;
+	} *head;
+	int length;
+	int nbyte;
 };
-_Bool list_empty(list_ptr lst);
-int   list_size(list_ptr);
-void  list_push_back(list_ptr lst, Generic x);
-Generic list_pop_back(list_ptr lst);
-void  list_insert(list_ptr lst, Generic x, int index);
-Generic list_remove_by_index(list_ptr lst, int index);
-void  list_delete(list_ptr *lst);
-int   list_find_elem(list_ptr lst, Generic x);
-void  list_walk(list_ptr lst, int (*func)());
+
+_Bool 	list_empty		(T lst);
+int   	list_size		(T);
+void 	list_pushback		(T lst, Generic x);
+Generic list_popback		(T lst);
+void  	list_insert		(T lst, Generic x, int index);
+Generic list_remove_by_idx	(T lst, int index);
+void  	list_delete		(T *lst);
+int   	list_find_elem		(T lst, Generic x);
+void  	list_walk		(T lst, int (*CALLBACK)(void*));
 
 #define list_is_nil(expr)	\
 	if ((expr) == 0)       \
 		exception_list(NIL_PTR)
 
-list list_constructor(int nbyte)
+T list_constructor(int nbyte)
 {
- 	list t;
+ 	T t;
 	t = chkmalloc(sizeof(*t));
-	t->head = chkmalloc(sizeof(*t->head));
+	t->head = chkmalloc(sizeof(*(t->head)));
 	t->length = 0;
 	t->nbyte = nbyte;
-
-	t->empty = list_empty;
-	t->size  = list_size;
-	t->push_back = list_push_back;
-	t->pop_back = list_pop_back;
-	t->insert = list_insert;
-	t->remove_by_index = list_remove_by_index;
-	t->delete = list_delete;
-	t->find_elem = list_find_elem;
-	t->walk = list_walk;
 	return t;
 }
 
-_Bool list_empty(list_ptr lst)
+_Bool list_empty(T lst)
 {
-	list_is_nil(lst && lst->head);
+	list_is_nil(lst);
 	return lst->length == 0;
 }
 
-int list_size(list_ptr lst)
+int list_size(T lst)
 {
-	list_is_nil(lst && lst->head);
+	list_is_nil(lst);
 	return lst->length;
 }
 
@@ -66,19 +62,19 @@ int list_size(list_ptr lst)
 	for (int i = 0; i < length; i++)	\
 		cur = cur->next;	\
 
-void list_push_back(list_ptr lst, Generic x)
+void list_pushback(T lst, Generic x)
 {
-	list_is_nil(lst && lst->head);
+	list_is_nil(lst);
 	list_insert(lst, x, lst->length);
 }
 
-Generic list_pop_back(list_ptr lst)
+Generic list_popback(T lst)
 {
-	list_is_nil(lst && lst->head);
-	return list_remove_by_index(lst, lst->length);
+	list_is_nil(lst && lst->length);
+	return list_remove_by_idx(lst, lst->length);
 }
 
-void list_insert(list_ptr lst, Generic x, int index)
+void list_insert(T lst, Generic x, int index)
 {
 	struct elem *t;
 	t = chkmalloc(sizeof(*t));
@@ -89,11 +85,11 @@ void list_insert(list_ptr lst, Generic x, int index)
 	lst->length++;
 }
 
-Generic list_remove_by_index(list_ptr lst, int index)
+Generic list_remove_by_idx(T lst, int index)
 {
 	Generic x;
 	struct elem *tmpnode;
-	list_is_nil(lst && lst->head);
+	list_is_nil(lst && lst->length);
 	if (index < 0 || index > lst->length) {
 		exception_list(ACC_OFLOW);
 		return NULL;
@@ -107,7 +103,7 @@ Generic list_remove_by_index(list_ptr lst, int index)
 	return x;
 }
 
-void list_delete(list_ptr *lst)
+void list_delete(T *lst)
 {
 	list_is_nil(lst && *lst);
 	struct elem *t, *u;
@@ -118,9 +114,9 @@ void list_delete(list_ptr *lst)
 	free(*lst);
 }
 
-int list_find_elem(list_ptr lst, Generic x)
+int list_find_elem(T lst, Generic x)
 {
-	list_is_nil(lst && lst->head);
+	list_is_nil(lst && lst->length);
 	struct elem *cur = lst->head->next;
 	int index = 0;
 	while (cur != NULL) {
@@ -138,9 +134,9 @@ int list_find_elem(list_ptr lst, Generic x)
 		cur = cur->next; 		\
 	}					\
 }
-void list_walk(list_ptr lst, int (*func)())
+void list_walk(T lst, int (*CALLBACK)(void*))
 {
-	list_is_nil(lst && lst->head);
+	list_is_nil(lst);
 	struct elem *cur = lst->head->next;
-	walk_list(cur, func(cur->x));
+	walk_list(cur, CALLBACK(cur->x));
 }

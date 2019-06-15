@@ -15,5 +15,7 @@ $(lib): $(obj)
 	$(AR) $(ARFLAGS) $(lib) $(obj)
 	ranlib $(lib)
 $(obj): $(src)
+test: $(lib)
+	$(CC) main.c -L. -lcds
 clean:
-	rm -rf *.o $(lib) 
+	rm -rf *.o $(lib) a.out

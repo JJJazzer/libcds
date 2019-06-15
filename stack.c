@@ -1,5 +1,5 @@
 /*
- * file name: stack.c
+ * file name: T.c
  * author   : Yu Liu
  * email    : <ilhanwnz@hotmail.com>
  * time     : Tue 04 Jun 2019 08:26:29 AM CST
@@ -9,82 +9,81 @@
 #include "chktools.h"
 #include <assert.h>
 
-struct elem {
-	Generic x;
-	struct elem *next;
+#define T 	Stack_T
+struct T {
+	struct elem {
+		Generic x;
+		struct elem *next;
+	}*head;
+	int 	length;
+	int 	nbyte;
 };
 
-_Bool stk_empty(stack stk);
-int   stk_size (stack stk);
-void  stk_push (stack stk, Generic x);
-Generic stk_pop  (stack stk);
-void  stk_delete(stack *stk);
+_Bool stack_empty		(T stack);
+int   stack_size 		(T stack);
+void  stack_push 		(T stack, Generic x);
+Generic stack_pop 		(T stack);
+void  stack_delete		(T *stack);
 
-#define stk_is_nil(expr)	\
+#define stack_is_nil(expr)	\
 	if ((expr) == (void*) 0)\
 		exception_stack(NIL_PTR);
 
-stack stack_constructor(int nbyte)
+T stack_constructor(int nbyte)
 {
-	stack stk;
-	stk = chkmalloc(sizeof(*stk));
-	stk->head = NULL;
-	stk->length = 0;
-	stk->head = NULL;
-	stk->nbyte = nbyte;
+	T stack;
+	stack = chkmalloc(sizeof(*stack));
+	stack->head = NULL;
+	stack->length = 0;
+	stack->nbyte = nbyte;
 	
-	stk->empty = stk_empty;
-	stk->size = stk_size;
-	stk->push = stk_push;
-	stk->pop = stk_pop;
-	stk->delete = stk_delete;
-	return stk;
+	return stack;
 }
 
-_Bool stk_empty(stack stk)
+_Bool stack_empty(T stack)
 {
-	stk_is_nil(stk);
-	return stk->length == 0;
+	stack_is_nil(stack);
+	return stack->length == 0;
 }
-int stk_size(stack stk)
+int stack_size(T stack)
 {
-	stk_is_nil(stk);
-	return stk->length;
+	stack_is_nil(stack);
+	return stack->length;
 }
-void stk_push(stack stk, Generic x)
+void stack_push(T stack, Generic x)
 {
 	struct elem *t;
-	stk_is_nil(stk);
+	stack_is_nil(stack);
 	t = chkmalloc(sizeof(*t));
 	t->x = x;
-	t->next = stk->head;
-	stk->head = t;
-	stk->length++;
+	t->next = stack->head;
+	stack->head = t;
+	stack->length++;
 }
 
-Generic stk_pop(stack stk)
+Generic stack_pop(T stack)
 {
 	Generic x;
 	struct elem *t;
-	if (stk->length <= 0) { 
+	if (stack->length <= 0) { 
 		exception_stack(ACC_OFLOW);
 		return NULL;
 	}
-	stk_is_nil(stk);
-	t = stk->head;
-	stk->head = t->next;
-	stk->length--;
+	stack_is_nil(stack);
+	t = stack->head;
+	stack->head = t->next;
+	stack->length--;
 	x = t->x;
 	free(t);
 	return x;
 }
 
-void stk_delete(stack *stk)
+void stack_delete(T *stack)
 {
 	struct elem *t, *u;
-	for (t = (*stk)->head; t; t = u) {
+	for (t = (*stack)->head; t; t = u) {
 		u = t->next;
 		free(t);
 	}
-	free(*stk);
+	free(*stack);
 }
