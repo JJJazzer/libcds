@@ -1,4 +1,4 @@
-test*.c
 *.o
+main*.c
 *.a
 a.out

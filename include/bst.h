@@ -18,13 +18,15 @@ typedef T		locate;
 
 extern T 	bst_constructor 	(int nbyte);
 extern T 	bst_insert		(T bst, int x);
-extern void 	bst_remove		(T bst);
+extern T 	bst_remove		(T bst, int x);
 extern void 	bst_delete		(T *bst);
 extern locate	bst_search		(T bst, int x);
 extern locate 	bst_getmin		(T bst);
 extern locate 	bst_getmax		(T bst);
 extern int 	bst_retrieve		(locate bst);
 extern void 	bst_inorder		(T bst, int (*CALLBACK)(void *x));
+extern void 	bst_preorder		(T bst, int (*CALLBACK)(void *x));
+extern void 	bst_postorder		(T bst, int (*CALLBACK)(void *x));
 
 #undef T
 #endif

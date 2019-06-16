@@ -79,13 +79,14 @@ locate bst_getmax(T bst)
 
 int bst_retrieve(T bst)
 {
+	assert(bst);
 	return bst->x;
 }
 
 T bst_remove(T bst, int x)
 {
 	T tmp_node;
-	if (T == NULL)
+	if (bst == NULL)
 		return NULL;
 	else if (x < bst->x)
 		bst->left = bst_remove(bst->left, x);
@@ -94,7 +95,7 @@ T bst_remove(T bst, int x)
 	else {
 		if (bst->left && bst->right) {
 			tmp_node = bst_getmin(bst->right);
-			bst->x = tmp_node->elem;
+			bst->x = tmp_node->x;
 			bst->right = bst_remove(bst->right, bst->x);
 
 		} else {
@@ -107,12 +108,39 @@ T bst_remove(T bst, int x)
 		}
 	}
 	return bst;
-
+}
+void bst_delete(T *bst)
+{
+	assert(bst);
+	if (*bst == NULL)
+		return;
+	bst_delete(&(*bst)->left);
+	bst_delete(&(*bst)->right);
+	free(*bst);
+}
 void bst_inorder(T bst, int (*CALLBACK)(void*))
 {
 	if (bst != NULL) {
 		bst_inorder(bst->left, CALLBACK);
 		CALLBACK(&bst->x);
 		bst_inorder(bst->right, CALLBACK);
+	}
+}
+
+void bst_preorder(T bst, int (*CALLBACK)(void*))
+{
+	if (bst != NULL) {
+		CALLBACK(&bst->x);
+		bst_preorder(bst->left, CALLBACK);
+		bst_preorder(bst->right, CALLBACK);
+	}
+}
+
+void bst_postorder(T bst, int (*CALLBACK)(void*))
+{
+	if (bst != NULL) {
+		bst_postorder(bst->left, CALLBACK);
+		bst_postorder(bst->right, CALLBACK);
+		CALLBACK(&bst->x);
 	}
 }
