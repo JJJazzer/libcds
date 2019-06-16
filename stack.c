@@ -19,11 +19,11 @@ struct T {
 	int 	nbyte;
 };
 
-_Bool stack_empty		(T stack);
-int   stack_size 		(T stack);
-void  stack_push 		(T stack, Generic x);
+_Bool 	stack_empty		(T stack);
+int   	stack_size 		(T stack);
+void    stack_push 		(T stack, Generic x);
 Generic stack_pop 		(T stack);
-void  stack_delete		(T *stack);
+void  	stack_delete		(T *stack);
 
 #define stack_is_nil(expr)	\
 	if ((expr) == (void*) 0)\

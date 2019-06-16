@@ -30,6 +30,7 @@ extern void 	list_insert		(T lst, Generic x, int index);
 extern Generic 	list_remove_by_idx	(T lst, int index);
 extern void 	list_delete		(T *lst);
 extern int 	list_find_elem 		(T lst, Generic x);
+extern Generic 	list_get_elem_by_idx	(T lst, int index);
 extern void 	list_walk		(T lst, int (*CALLBACK) (void*));
 
 #undef T

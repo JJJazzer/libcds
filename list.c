@@ -21,13 +21,14 @@ struct T {
 };
 
 _Bool 	list_empty		(T lst);
-int   	list_size		(T);
+int   	list_size		(T lst);
 void 	list_pushback		(T lst, Generic x);
 Generic list_popback		(T lst);
 void  	list_insert		(T lst, Generic x, int index);
 Generic list_remove_by_idx	(T lst, int index);
 void  	list_delete		(T *lst);
-int   	list_find_elem		(T lst, Generic x);
+int     list_find_elem		(T lst, Generic x);
+Generic list_get_elem_by_idx	(T lst, int index);
 void  	list_walk		(T lst, int (*CALLBACK)(void*));
 
 #define list_is_nil(expr)	\
@@ -71,7 +72,7 @@ void list_pushback(T lst, Generic x)
 Generic list_popback(T lst)
 {
 	list_is_nil(lst && lst->length);
-	return list_remove_by_idx(lst, lst->length);
+	return list_remove_by_idx(lst, lst->length - 1);
 }
 
 void list_insert(T lst, Generic x, int index)
@@ -94,7 +95,7 @@ Generic list_remove_by_idx(T lst, int index)
 		exception_list(ACC_OFLOW);
 		return NULL;
 	}
-	goto_list_tail(cur, lst->head, index - 1);
+	goto_list_tail(cur, lst->head, index);
 	x = cur->next->x;
 	tmpnode = cur->next;
 	cur->next = tmpnode->next;
@@ -119,13 +120,21 @@ int list_find_elem(T lst, Generic x)
 	list_is_nil(lst && lst->length);
 	struct elem *cur = lst->head->next;
 	int index = 0;
+
 	while (cur != NULL) {
-		if (memcmp(cur->x, x, lst->nbyte) == 0)
+		if (cur->x == x)
 			return index;
 		index++;
 		cur = cur->next;
 	}
 	return -1;
+}
+
+Generic list_get_elem_by_idx(T lst, int index)
+{	
+	list_is_nil(lst && lst->length);
+	goto_list_tail(cur, lst->head, index);
+	return cur->next->x;
 }
 #define walk_list(cur, func)	\
 {						\

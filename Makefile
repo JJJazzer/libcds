@@ -6,8 +6,8 @@
 #######################################################################
 
 lib := libcds.a
-obj := vector.o list.o stack.o exception.o 
-src := vector.c list.c stack.c exception.c
+obj := vector.o list.o stack.o bst.o exception.o 
+src := vector.c list.c stack.c bst.c exception.c
 CC  := gcc
 VPATH := include
 CFLAGS += -Iinclude -DCOMPILER_GCC 

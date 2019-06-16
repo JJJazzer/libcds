@@ -13,8 +13,8 @@
 #define T 	Stack_T
 typedef struct T 	*T; 
 
-extern T stack_constructor(int nbyte);
-#define STACK_INIT(type) 		stack_constructor(sizeof(type))
+extern T 	stack_constructor	(int nbyte);
+#define 	STACK_INIT(type) 	stack_constructor(sizeof(type))
 extern _Bool 	stack_empty 		(T stk);
 extern int 	stack_size 		(T stk);
 extern void 	stack_push 		(T stk, Generic x);
